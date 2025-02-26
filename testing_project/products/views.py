@@ -1,7 +1,11 @@
+import requests
+from requests.exceptions import RequestException
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponse
 from products.models import Product
 from products.forms import ProductForm
+
 
 
 def homePage(request):
@@ -32,3 +36,11 @@ def profile(request):
 
 def login(request):
     return render(request, 'login.html')
+
+def post(request):
+    try:
+        response = requests.get("https://jsonplaceholder.typicode.com/posts/1")
+        response.raise_for_status()
+        return JsonResponse(response.json())
+    except RequestException as e:
+        return HttpResponse("Service unavailable", status=503)
